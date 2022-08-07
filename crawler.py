@@ -59,37 +59,34 @@ class StreetBeat:
         data = self.get_json_data(link)
         items = data['catalog']['listing']['items']
         for item in items:
+            url = 'https://street-beat.ru' + item['url']
+            print(url)
+            self.driver.get(url)
+            sleep(3)
+            self.wait.until(
+               EC.presence_of_element_located((By.XPATH, '/html/body/article/div[1]/div')))
+            soup = BeautifulSoup(self.driver.page_source, 'lxml')
+            category = soup.find_all('a', {'class': 'breadcrumbs__link'})
+            category1 = category[-4].text.strip()
+            category2 = category[-3].text.strip()
+            category3 = category[-2].text.strip()
+            category4 = category[-1].text.strip()
+            brand = soup.find("div", {"class": "tags-list"}).find_all('a')[2].text.replace("Другие товары", "").strip()
             try:
-                url = 'https://street-beat.ru' + item['url']
-                print(url)
-                self.driver.get(url)
-                sleep(3)
-                self.wait.until(
-                    EC.presence_of_element_located((By.XPATH, '/html/body/article/div[1]/div')))
-                soup = BeautifulSoup(self.driver.page_source, 'lxml')
-                category = soup.find_all('a', {'class': 'breadcrumbs__link'})
-                category1 = category[-4].text.strip()
-                category2 = category[-3].text.strip()
-                category3 = category[-2].text.strip()
-                category4 = category[-1].text.strip()
-                brand = soup.find("div", {"class": "tags-list"}).find_all('a')[2].text.replace("Другие товары", "").strip()
-                try:
-                    description = soup.find('div', {'class': 'tab__header'}).find('div', {'class': 'tab__description'}).text
-                except:
-                    description = ''
-                added = datetime.now().strftime("%Y-%m-%d %H:%M")
-                updated = datetime.now().strftime("%Y-%m-%d %H:%M")
-                self.product_list.append({
-                    'SKU': item['id'], 'Vendor code': '', 'Name': item['title'], 'Brand': brand,
-                    'Category1': category1, 'Category2': category2, 'Category3': category3, 'Category4': category4,
-                    'Price old': item['price']['recommended']['price'],
-                    'Price': item['price']['special']['price'],
-                    'Price unit': item['price']['recommended']['currency'], 'Available': 'True', 'Added': added,
-                    'Updated': updated, 'Url': url, 'Image url': item['image']['main']['desktopX2'],
-                    'txtDescription': description
-                })
+                description = soup.find('div', {'class': 'tab__header'}).find('div', {'class': 'tab__description'}).text
             except:
-                print('This page not parse!')
+                description = ''
+            added = datetime.now().strftime("%Y-%m-%d %H:%M")
+            updated = datetime.now().strftime("%Y-%m-%d %H:%M")
+            self.product_list.append({
+                'SKU': item['id'], 'Vendor code': '', 'Name': item['title'], 'Brand': brand,
+                'Category1': category1, 'Category2': category2, 'Category3': category3, 'Category4': category4,
+                'Price old': item['price']['recommended']['price'],
+                'Price': item['price']['special']['price'],
+                'Price unit': item['price']['recommended']['currency'], 'Available': 'True', 'Added': added,
+                'Updated': updated, 'Url': url, 'Image url': item['image']['main']['desktopX2'],
+                'txtDescription': description
+            })
 
     def get_json_data(self, link):
         """
