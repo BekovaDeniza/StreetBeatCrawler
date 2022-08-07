@@ -1,6 +1,6 @@
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 
@@ -112,7 +112,7 @@ class StreetBeat:
 
 
 if __name__ == "__main__":
-    object = StreetBeat()
-    object.bypass_all_pages()
-    object.save_data()
+    sb = StreetBeat()
+    sb.bypass_all_pages()
+    sb.save_data()
     print(time() - start_time)
