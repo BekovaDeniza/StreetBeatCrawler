@@ -41,7 +41,6 @@ class StreetBeat:
         """
         We find out the number of pages in the catalog and ask each.
         """
-
         link = 'https://street-beat.ru/cat/kids/'
         data = self.get_json_data(link)
         pages_count = data['catalog']['pagination']['lastPage']
