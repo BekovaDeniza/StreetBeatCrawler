@@ -1,4 +1,4 @@
-# StreetBeatCrawler_v2
+# StreetBeatCrawler
 # Парсер для сайта street-beat.ru
 
 
