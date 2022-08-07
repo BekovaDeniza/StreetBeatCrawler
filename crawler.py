@@ -71,7 +71,10 @@ class StreetBeat:
             category2 = category[-3].text.strip()
             category3 = category[-2].text.strip()
             category4 = category[-1].text.strip()
-            brand = soup.find("div", {"class": "tags-list"}).find_all('a')[2].text.replace("Другие товары", "").strip()
+            try:
+                brand = soup.find("div", {"class": "tags-list"}).find_all('a')[2].text.replace("Другие товары", "").strip()
+            except:
+                brand = ''
             try:
                 description = soup.find('div', {'class': 'tab__header'}).find('div', {'class': 'tab__description'}).text
             except:
