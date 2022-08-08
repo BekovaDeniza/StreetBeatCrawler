@@ -39,6 +39,7 @@ class StreetBeat:
         for i in range(1, pages_count + 1):
             print(f'parsing {i} page out of {pages_count}')
             self.parse_items(self.url % i, date_list)
+        self.driver.quit()
 
     def parse_items(self, link, date_list):
         """
