@@ -7,12 +7,9 @@ from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 
 from datetime import datetime
-from time import sleep, time
 import json
 import re
 import os
-
-start_time = time()
 
 
 class StreetBeat:
@@ -24,10 +21,6 @@ class StreetBeat:
         options.add_argument('user-agent=Mozilla/5.0 (X11; Linux x86_64)AppleWebKit/537.36 (KHTML, '
                              'like Gecko)Chrome/99.0.4844.51 Safari/537.36')
         options.add_argument("start-maximized")
-        options.add_argument('--disable-blink-features=AutomationControlled')
-
-        options.add_experimental_option("excludeSwitches", ['enable-automation', 'enable-logging'])
-        options.add_experimental_option('useAutomationExtension', False)
         options.add_argument('--headless')
         self.driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
         self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
@@ -39,8 +32,8 @@ class StreetBeat:
         """
         link = 'https://street-beat.ru/cat'
         date_list = [
-            self.get_added() if os.path.exists('street-beat.json') else datetime.now().strftime("%Y-%m-%d %H:%M"),
-            datetime.now().strftime("%Y-%m-%d %H:%M")]
+            self.get_added() if os.path.exists('street-beat.json') else datetime.now().strftime("%Y-%m-%d"),
+            datetime.now().strftime("%Y-%m-%d")]
         data = self.get_json_data(link)
         pages_count = data['catalog']['pagination']['lastPage']
         for i in range(1, pages_count + 1):
@@ -58,9 +51,7 @@ class StreetBeat:
         items = data['catalog']['listing']['items']
         for item in items:
             url = 'https://street-beat.ru' + item['url']
-            print(url)
             self.driver.get(url)
-            sleep(3)
             self.wait.until(
                 EC.presence_of_element_located((By.XPATH, '/html/body/article/div[1]/div')))
             soup = BeautifulSoup(self.driver.page_source, 'lxml')
@@ -119,4 +110,3 @@ if __name__ == "__main__":
     sb = StreetBeat()
     sb.bypass_all_pages()
     sb.save_data()
-    print(time() - start_time)
